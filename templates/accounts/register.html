@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register – Movie Catalog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h1 class="auth-title">Cont <span>Nou</span></h1>
+        <p class="auth-sub">Creează-ți contul gratuit</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="auth-alert auth-alert--{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="field">
+                <label for="id_username">Utilizator</label>
+                <input type="text" name="username" id="id_username"
+                        placeholder="alege un username"
+                        value="{{ form.username.value|default:'' }}">
+                {% if form.username.errors %}
+                    <span class="field-error">{{ form.username.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label for="id_password1">Parolă</label>
+                <input type="password" name="password1" id="id_password1"
+                        placeholder="••••••••">
+                {% if form.password1.errors %}
+                    <span class="field-error">{{ form.password1.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label for="id_password2">Confirmă parola</label>
+                <input type="password" name="password2" id="id_password2"
+                        placeholder="••••••••">
+                {% if form.password2.errors %}
+                    <span class="field-error">{{ form.password2.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-submit">Creează cont</button>
+        </form>
+
+        <p class="auth-switch">
+            Ai deja cont? <a href="{% url 'login' %}">Loghează-te</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
