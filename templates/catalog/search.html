@@ -1,53 +1,30 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Movie Catalog{% endblock %}
+{% block title %}Search – Movie Catalog{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<!-- Hero -->
-<section class="hero {% if hero_movie %}hero--with-bg{% endif %}"
-         {% if hero_movie %}style="--hero-bg: url('{{ hero_movie.image.url }}')"{% endif %}>
-
+<section class="hero">
     <div class="hero-bg"></div>
-
     <div class="hero-content">
-        <p class="hero-eyebrow">Descoperă cinematografia</p>
-        <h1 class="hero-title">Catalogul tău<br><span>de filme</span></h1>
-        {% if hero_movie %}
-        <p class="hero-featured">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            Acum în catalog: <strong>{{ hero_movie.title }}</strong>
+        <p class="hero-eyebrow">Rezultate căutare</p>
+        <h1 class="hero-title">„<span>{{ query }}</span>"</h1>
+        <p class="hero-sub">
+            {% if movies %}
+                {{ movies.count }} film{% if movies.count != 1 %}e{% endif %} găsit{% if movies.count != 1 %}e{% endif %}
+            {% elif query %}
+                Niciun film găsit
+            {% endif %}
         </p>
-        {% endif %}
-        <p class="hero-sub">{{ movies.count }} filme disponibile</p>
     </div>
 </section>
 
-<!-- Genre filter -->
 <section class="catalog-section">
     <div class="container">
-
-        <div class="genre-bar">
-            <a href="{% url 'home' %}"
-               class="genre-pill {% if not active_genre %}active{% endif %}">
-                Toate
-            </a>
-            {% for key, label in genres %}
-            <a href="?genre={{ key }}"
-               class="genre-pill {% if active_genre == key %}active{% endif %}">
-                {{ label }}
-            </a>
-            {% endfor %}
-        </div>
-
-        <!-- Grid filme -->
         {% if movies %}
         <div class="movies-grid">
             {% for movie in movies %}
@@ -63,20 +40,20 @@
                             </svg>
                         </div>
                     {% endif %}
-                    {% if user.is_authenticated %}
-                        <button
-                            class="btn-fav {% if movie.id in favorite_ids %}active{% endif %}"
-                            data-movie-id="{{ movie.id }}"
-                            data-url="{% url 'toggle_favorite' movie.id %}"
-                            title="{% if movie.id in favorite_ids %}Elimină din favorite{% else %}Adaugă la favorite{% endif %}">
-                            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                            </svg>
-                        </button>
-                    {% endif %}
                     <div class="card-overlay">
                         <span class="card-genre">{{ movie.get_genre_display }}</span>
                     </div>
+                    {% if user.is_authenticated %}
+                    <button
+                        class="btn-fav {% if movie.id in favorite_ids %}active{% endif %}"
+                        data-movie-id="{{ movie.id }}"
+                        data-url="{% url 'toggle_favorite' movie.id %}"
+                        title="{% if movie.id in favorite_ids %}Elimină din favorite{% else %}Adaugă la favorite{% endif %}">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </button>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="card-meta">
@@ -97,17 +74,24 @@
             {% endfor %}
         </div>
 
+        {% elif query %}
+        <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <p>Niciun film cu numele „{{ query }}".</p>
+            <a href="{% url 'home' %}" class="btn-reset">Vezi toate filmele</a>
+        </div>
+
         {% else %}
         <div class="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <p>Niciun film găsit pentru acest gen.</p>
-            <a href="{% url 'home' %}" class="btn-reset">Vezi toate filmele</a>
+            <p>Scrie un nume de film în bara de căutare.</p>
         </div>
         {% endif %}
 
     </div>
 </section>
-
 {% endblock %}
