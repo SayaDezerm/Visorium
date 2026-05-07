@@ -21,6 +21,18 @@ class Movie(models.Model):
     genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
     duration = models.IntegerField(blank=True, null=True)
     release_year = models.IntegerField()
+    trailer_url = models.URLField(blank=True, null=True, help_text="URL YouTube (ex: https://www.youtube.com/watch?v=xxx)")
+
+    def get_youtube_embed(self):
+        if not self.trailer_url:
+            return None
+        if 'watch?v=' in self.trailer_url:
+            video_id = self.trailer_url.split('watch?v=')[-1].split('&')[0]
+        elif 'youtu.be/' in self.trailer_url:
+            video_id = self.trailer_url.split('youtu.be/')[-1].split('?')[0]
+        else:
+            return None
+        return f"https://www.youtube.com/embed/{video_id}"
 
     def __str__(self):
         return f"{self.title} - {self.release_year}" 

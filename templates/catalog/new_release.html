@@ -23,7 +23,14 @@
         {% if movies %}
         <div class="movies-grid">
             {% for movie in movies %}
-            <article class="movie-card">
+            <article class="movie-card"
+                data-title="{{ movie.title }}"
+                data-year="{{ movie.release_year }}"
+                data-genre="{{ movie.get_genre_display }}"
+                data-duration="{{ movie.duration|default:'' }}"
+                data-description="{{ movie.description }}"
+                data-poster="{% if movie.image %}{{ movie.image.url }}{% endif %}"
+                data-trailer="{% if movie.get_youtube_embed %}{{ movie.get_youtube_embed }}{% endif %}">
                 <div class="card-poster">
                     {% if movie.image %}
                         <img src="{{ movie.image.url }}" alt="{{ movie.title }}">

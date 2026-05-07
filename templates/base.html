@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/nav-bar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -19,6 +20,48 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+<!-- MOVIE MODAL -->
+<div class="modal-overlay" id="movieModal">
+    <div class="modal">
+
+        <button class="modal-close" id="modalClose">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+
+        <!-- Trailer / Poster -->
+        <div class="modal-media" id="modalMedia"></div>
+
+        <!-- Info -->
+        <div class="modal-body">
+            <div class="modal-meta">
+                <span class="modal-genre" id="modalGenre"></span>
+                <span class="modal-year" id="modalYear"></span>
+                <span class="modal-duration" id="modalDuration">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span id="modalDurationText"></span>
+                </span>
+            </div>
+
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-description" id="modalDescription"></p>
+
+            <div class="modal-actions">
+                <button class="modal-btn-fav" id="modalFavBtn" style="display:none">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span>Adaugă la favorite</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <script src="{% static 'js/main.js' %}"></script>
 

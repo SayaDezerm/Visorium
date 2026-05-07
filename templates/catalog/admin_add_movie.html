@@ -75,6 +75,15 @@
                 {% if form.image.errors %}<span class="field-error">{{ form.image.errors.0 }}</span>{% endif %}
             </div>
 
+            <div class="field">
+                <label>Trailer YouTube (URL)</label>
+                <input type="url" name="trailer_url" placeholder="https://www.youtube.com/watch?v=..."
+                    value="{{ form.trailer_url.value|default:'' }}">
+                {% if form.trailer_url.errors %}
+                    <span class="field-error">{{ form.trailer_url.errors.0 }}</span>
+                {% endif %}
+            </div>
+
             <button type="submit" class="btn-submit">Adaugă filmul</button>
         </form>
     </div>
