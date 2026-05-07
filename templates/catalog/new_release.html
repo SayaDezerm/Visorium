@@ -35,6 +35,17 @@
                             </svg>
                         </div>
                     {% endif %}
+                    {% if user.is_authenticated %}
+                            <button
+                                class="btn-fav {% if movie.id in favorite_ids %}active{% endif %}"
+                                data-movie-id="{{ movie.id }}"
+                                data-url="{% url 'toggle_favorite' movie.id %}"
+                                title="{% if movie.id in favorite_ids %}Elimină din favorite{% else %}Adaugă la favorite{% endif %}">
+                                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                    {% endif %}
                     <div class="card-overlay">
                         <span class="card-genre">{{ movie.get_genre_display }}</span>
                     </div>

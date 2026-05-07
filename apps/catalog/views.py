@@ -1,6 +1,8 @@
-from django.shortcuts import render
-from .models import Movie
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Movie, Favorite
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -25,3 +27,21 @@ def new_movies(request):
 
     movies = Movie.objects.filter(release_year__gte=new).order_by('-release_year')
     return render(request, 'catalog/new_release.html', {'movies': movies},)
+
+@login_required
+def toggle_favorites(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    favorite, created = Favorite.objects.get_or_create(user=request.user, movie=movie)
+
+    if not created:
+        favorite.delete()
+        is_favorite = False
+    else:
+        is_favorite = True
+
+    return JsonResponse({'is_favorite': is_favorite, 'movie_id': movie_id})
+
+@login_required
+def watchlist(request):
+    favorites = Favorite.objects.filter(user=request.user).select_related('movie').order_by('-added_at')
+    return render(request, 'catalog/watchlist.html', {'favorites': favorites})

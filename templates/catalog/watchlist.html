@@ -1,45 +1,28 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Movie Catalog{% endblock %}
+{% block title %}Watchlist – Movie Catalog{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<!-- Hero -->
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
-        <p class="hero-eyebrow">Descoperă cinematografia</p>
-        <h1 class="hero-title">Catalogul tău<br><span>de filme</span></h1>
-        <p class="hero-sub">{{ movies.count }} filme disponibile</p>
+        <p class="hero-eyebrow">Lista ta</p>
+        <h1 class="hero-title">Watch<span>list</span></h1>
+        <p class="hero-sub">{{ favorites.count }} filme salvate</p>
     </div>
 </section>
 
-<!-- Genre filter -->
 <section class="catalog-section">
     <div class="container">
-
-        <div class="genre-bar">
-            <a href="{% url 'home' %}"
-               class="genre-pill {% if not active_genre %}active{% endif %}">
-                Toate
-            </a>
-            {% for key, label in genres %}
-            <a href="?genre={{ key }}"
-               class="genre-pill {% if active_genre == key %}active{% endif %}">
-                {{ label }}
-            </a>
-            {% endfor %}
-        </div>
-
-        <!-- Grid filme -->
-        {% if movies %}
+        {% if favorites %}
         <div class="movies-grid">
-            {% for movie in movies %}
+            {% for fav in favorites %}
+            {% with movie=fav.movie %}
             <article class="movie-card">
                 <div class="card-poster">
                     {% if movie.image %}
@@ -52,20 +35,18 @@
                             </svg>
                         </div>
                     {% endif %}
-                    {% if user.is_authenticated %}
-                        <button
-                            class="btn-fav {% if movie.id in favorite_ids %}active{% endif %}"
-                            data-movie-id="{{ movie.id }}"
-                            data-url="{% url 'toggle_favorite' movie.id %}"
-                            title="{% if movie.id in favorite_ids %}Elimină din favorite{% else %}Adaugă la favorite{% endif %}">
-                            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                            </svg>
-                        </button>
-                    {% endif %}
                     <div class="card-overlay">
                         <span class="card-genre">{{ movie.get_genre_display }}</span>
                     </div>
+                    <button
+                        class="btn-fav active"
+                        data-movie-id="{{ movie.id }}"
+                        data-url="{% url 'toggle_favorite' movie.id %}"
+                        title="Elimină din favorite">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="card-body">
                     <div class="card-meta">
@@ -83,20 +64,18 @@
                     <p class="card-desc">{{ movie.description|truncatechars:90 }}</p>
                 </div>
             </article>
+            {% endwith %}
             {% endfor %}
         </div>
-
         {% else %}
         <div class="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            <p>Niciun film găsit pentru acest gen.</p>
-            <a href="{% url 'home' %}" class="btn-reset">Vezi toate filmele</a>
+            <p>Nu ai niciun film salvat încă.</p>
+            <a href="{% url 'home' %}" class="btn-reset">Explorează filmele</a>
         </div>
         {% endif %}
-
     </div>
 </section>
-
 {% endblock %}

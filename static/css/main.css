@@ -243,3 +243,38 @@
     .hero { padding: 3rem 1.25rem 2.5rem; }
     .catalog-section .container { padding: 0 1.25rem; }
 }
+
+/* ── BUTON FAVORIT ── */
+.btn-fav {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(10,10,15,0.75);
+    backdrop-filter: blur(6px);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    z-index: 2;
+}
+
+.btn-fav svg {
+    width: 16px;
+    height: 16px;
+    stroke: #888880;
+    fill: none;
+    transition: stroke 0.2s, fill 0.2s;
+}
+
+.btn-fav:hover { transform: scale(1.15); }
+
+.btn-fav.active svg {
+    stroke: #e8b84b;
+    fill: #e8b84b;
+}
+
+.btn-fav:hover svg { stroke: #e8b84b; }

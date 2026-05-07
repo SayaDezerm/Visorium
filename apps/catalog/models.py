@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 # model for saving movies
 class Movie(models.Model):
@@ -22,3 +24,15 @@ class Movie(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.release_year}" 
+
+# model for saving to favorites
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="favorited_by")
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'movie')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.movie.title}"
