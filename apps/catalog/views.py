@@ -4,6 +4,10 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import random
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Count
+from django.contrib import messages
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -75,3 +79,62 @@ def search(request):
         )
     
     return render(request, 'catalog/search.html', {"movies": movies, "query": query, 'favorite_ids': favorite_ids})
+
+
+@staff_member_required
+def admin_dashboard(request):
+    total_movies = Movie.objects.count()
+    total_users = User.objects.count()
+    total_favorites = Favorite.objects.count()
+    new_this_year = Movie.objects.filter(release_year=datetime.now().year).count()
+
+    movies_by_genre = (
+        Movie.objects.values('genre')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+
+    top_movies = (
+        Movie.objects.annotate(fav_count=Count('favorited_by'))
+        .order_by('-fav_count')[:5]
+    )
+
+    recent_movies = Movie.objects.order_by('-id')[:5]
+
+    recent_users = User.objects.order_by('-date_joined')[:5]
+
+    return render(request, 'catalog/admin_dashboard.html', {
+        'total_movies':    total_movies,
+        'total_users':     total_users,
+        'total_favorites': total_favorites,
+        'new_this_year':   new_this_year,
+        'movies_by_genre': movies_by_genre,
+        'top_movies':      top_movies,
+        'recent_movies':   recent_movies,
+        'recent_users':    recent_users,
+    })
+
+
+@staff_member_required
+def admin_add_movie(request):
+    from .forms import MovieForm
+    if request.method == 'POST':
+        form = MovieForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Film adăugat cu succes!')
+            return redirect('admin_dashboard')
+        else:
+            messages.error(request, 'Corectează erorile de mai jos.')
+    else:
+        form = MovieForm()
+    return render(request, 'catalog/admin_add_movie.html', {'form': form})
+
+
+@staff_member_required
+def admin_delete_movie(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    if request.method == 'POST':
+        movie.delete()
+        messages.success(request, f'„{movie.title}" a fost șters.')
+    return redirect('admin_dashboard')

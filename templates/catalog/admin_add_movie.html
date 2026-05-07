@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Adaugă Film – Dashboard{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper">
+    <div class="dash-header">
+        <div>
+            <p class="dash-eyebrow">Staff Panel</p>
+            <h1 class="dash-title">Adaugă <span>Film</span></h1>
+        </div>
+        <a href="{% url 'admin_dashboard' %}" class="btn-back">← Înapoi la dashboard</a>
+    </div>
+
+    <div class="form-card">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="auth-alert auth-alert--{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Titlu</label>
+                    <input type="text" name="title" placeholder="Titlul filmului"
+                           value="{{ form.title.value|default:'' }}">
+                    {% if form.title.errors %}<span class="field-error">{{ form.title.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="field">
+                    <label>Gen</label>
+                    <select name="genre">
+                        {% for key, label in form.fields.genre.choices %}
+                            <option value="{{ key }}" {% if form.genre.value == key %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.genre.errors %}<span class="field-error">{{ form.genre.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="field">
+                    <label>An lansare</label>
+                    <input type="number" name="release_year" placeholder="2024"
+                           value="{{ form.release_year.value|default:'' }}">
+                    {% if form.release_year.errors %}<span class="field-error">{{ form.release_year.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="field">
+                    <label>Durată (minute)</label>
+                    <input type="number" name="duration" placeholder="120"
+                           value="{{ form.duration.value|default:'' }}">
+                    {% if form.duration.errors %}<span class="field-error">{{ form.duration.errors.0 }}</span>{% endif %}
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Descriere</label>
+                <textarea name="description" rows="4" placeholder="Descriere film...">{{ form.description.value|default:'' }}</textarea>
+                {% if form.description.errors %}<span class="field-error">{{ form.description.errors.0 }}</span>{% endif %}
+            </div>
+
+            <div class="field">
+                <label>Poster</label>
+                <input type="file" name="image" accept="image/*">
+                {% if form.image.errors %}<span class="field-error">{{ form.image.errors.0 }}</span>{% endif %}
+            </div>
+
+            <button type="submit" class="btn-submit">Adaugă filmul</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

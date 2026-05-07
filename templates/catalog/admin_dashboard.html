@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard – Movie Catalog{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper">
+
+    <!-- Header -->
+    <div class="dash-header">
+        <div>
+            <p class="dash-eyebrow">Staff Panel</p>
+            <h1 class="dash-title">Dashboard</h1>
+        </div>
+        <a href="{% url 'admin_add_movie' %}" class="btn-add">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Adaugă film
+        </a>
+    </div>
+
+    <!-- Stats cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon--movies">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="2"/>
+                    <path d="M7 2v20M17 2v20M2 12h20M2 7h5M17 7h5M2 17h5M17 17h5"/>
+                </svg>
+            </div>
+            <div>
+                <p class="stat-value">{{ total_movies }}</p>
+                <p class="stat-label">Total filme</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon stat-icon--users">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </div>
+            <div>
+                <p class="stat-value">{{ total_users }}</p>
+                <p class="stat-label">Utilizatori</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon stat-icon--favs">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="stat-value">{{ total_favorites }}</p>
+                <p class="stat-label">Favorite totale</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon stat-icon--new">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+            <div>
+                <p class="stat-value">{{ new_this_year }}</p>
+                <p class="stat-label">Lansate anul acesta</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-grid">
+
+        <!-- Top filme -->
+        <div class="dash-card">
+            <h2 class="dash-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                Top 5 favorite
+            </h2>
+            <div class="table-wrap">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Film</th>
+                            <th>Gen</th>
+                            <th>Favorite</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movie in top_movies %}
+                        <tr>
+                            <td class="rank">{{ forloop.counter }}</td>
+                            <td class="movie-name">{{ movie.title }}</td>
+                            <td><span class="badge">{{ movie.get_genre_display }}</span></td>
+                            <td class="fav-count">{{ movie.fav_count }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="empty-row">Nicio dată disponibilă</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Filme per gen -->
+        <div class="dash-card">
+            <h2 class="dash-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Filme per gen
+            </h2>
+            <div class="genre-stats">
+                {% for item in movies_by_genre %}
+                <div class="genre-row">
+                    <span class="genre-name">{{ item.genre|capfirst }}</span>
+                    <div class="genre-bar-wrap">
+                        <div class="genre-bar-fill"
+                             style="width: {% widthratio item.count total_movies 100 %}%">
+                        </div>
+                    </div>
+                    <span class="genre-count">{{ item.count }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Filme recente -->
+        <div class="dash-card">
+            <h2 class="dash-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="2"/>
+                    <path d="M7 2v20M17 2v20M2 12h20"/>
+                </svg>
+                Filme recent adăugate
+            </h2>
+            <div class="table-wrap">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>Film</th>
+                            <th>An</th>
+                            <th>Gen</th>
+                            <th>Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movie in recent_movies %}
+                        <tr>
+                            <td class="movie-name">{{ movie.title }}</td>
+                            <td>{{ movie.release_year }}</td>
+                            <td><span class="badge">{{ movie.get_genre_display }}</span></td>
+                            <td>
+                                <form method="POST" action="{% url 'admin_delete_movie' movie.id %}"
+                                      onsubmit="return confirm('Ștergi „{{ movie.title }}"?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-delete">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"/>
+                                            <path d="M19 6l-1 14H6L5 6"/>
+                                            <path d="M10 11v6M14 11v6"/>
+                                            <path d="M9 6V4h6v2"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="empty-row">Niciun film adăugat</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Useri recenti -->
+        <div class="dash-card">
+            <h2 class="dash-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                </svg>
+                Useri recenți
+            </h2>
+            <div class="table-wrap">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Data înregistrării</th>
+                            <th>Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in recent_users %}
+                        <tr>
+                            <td>
+                                <div class="user-row">
+                                    <div class="user-avatar-sm">{{ user.username|first|upper }}</div>
+                                    {{ user.username }}
+                                </div>
+                            </td>
+                            <td>{{ user.date_joined|date:"d M Y" }}</td>
+                            <td>
+                                {% if user.is_staff %}
+                                    <span class="badge badge--accent">Staff</span>
+                                {% else %}
+                                    <span class="badge">User</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="empty-row">Niciun user</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
