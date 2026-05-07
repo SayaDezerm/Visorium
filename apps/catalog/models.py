@@ -15,7 +15,7 @@ class Movie(models.Model):
 
     title = models.CharField(max_length=70)
     description = models.TextField()
-    image = models.ImageField(upload_to='posters/')
+    image = models.ImageField(upload_to='posters/', null=True, blank=True)
     genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
     duration = models.IntegerField(blank=True, null=True)
     release_year = models.IntegerField()
