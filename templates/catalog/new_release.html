@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}New Releases – Movie Catalog{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">Cele mai recente</p>
+        <h1 class="hero-title">New <span>Releases</span></h1>
+        <p class="hero-sub">{{ movies.count }} filme din ultimul an</p>
+    </div>
+</section>
+
+<section class="catalog-section">
+    <div class="container">
+        {% if movies %}
+        <div class="movies-grid">
+            {% for movie in movies %}
+            <article class="movie-card">
+                <div class="card-poster">
+                    {% if movie.image %}
+                        <img src="{{ movie.image.url }}" alt="{{ movie.title }}">
+                    {% else %}
+                        <div class="poster-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="2"/>
+                                <path d="M7 2v20M17 2v20M2 12h20M2 7h5M17 7h5M2 17h5M17 17h5"/>
+                            </svg>
+                        </div>
+                    {% endif %}
+                    <div class="card-overlay">
+                        <span class="card-genre">{{ movie.get_genre_display }}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span class="card-year">{{ movie.release_year }}</span>
+                        {% if movie.duration %}
+                        <span class="card-duration">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            {{ movie.duration }} min
+                        </span>
+                        {% endif %}
+                    </div>
+                    <h2 class="card-title">{{ movie.title }}</h2>
+                    <p class="card-desc">{{ movie.description|truncatechars:90 }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <p>Niciun film nou momentan.</p>
+            <a href="{% url 'home' %}" class="btn-reset">Vezi toate filmele</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
