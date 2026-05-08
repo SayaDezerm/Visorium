@@ -39,7 +39,6 @@ document.addEventListener('click', function(e) {
 // ── MODAL ──
 const modal        = document.getElementById('movieModal');
 const modalClose   = document.getElementById('modalClose');
-const modalMedia   = document.getElementById('modalMedia');
 const modalTitle   = document.getElementById('modalTitle');
 const modalGenre   = document.getElementById('modalGenre');
 const modalYear    = document.getElementById('modalYear');
@@ -54,28 +53,7 @@ document.addEventListener('click', function(e) {
     if (!card) return;
     if (e.target.closest('.btn-fav')) return; // ignoră click pe inimă
 
-    const { title, year, genre, duration, description, poster, trailer } = card.dataset;
-
-    // Media: trailer YouTube sau poster
-    if (trailer) {
-        modalMedia.innerHTML = `
-            <iframe
-                src="${trailer}?autoplay=1&mute=0&rel=0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-            </iframe>`;
-    } else if (poster) {
-        modalMedia.innerHTML = `<img src="${poster}" alt="${title}">`;
-    } else {
-        modalMedia.innerHTML = `
-            <div class="modal-no-media">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="2"/>
-                    <path d="M7 2v20M17 2v20M2 12h20"/>
-                </svg>
-                <span>Niciun trailer disponibil</span>
-            </div>`;
-    }
+    const { title, year, genre, duration, description} = card.dataset;
 
     // Info
     modalTitle.textContent       = title;
@@ -110,8 +88,6 @@ document.addEventListener('click', function(e) {
 function closeModal() {
     modal.classList.remove('open');
     document.body.style.overflow = '';
-    // oprește YouTube iframe
-    modalMedia.innerHTML = '';
 }
 
 modalClose.addEventListener('click', closeModal);
