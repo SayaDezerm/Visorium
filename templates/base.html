@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/nav-bar.css' %}">
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ai_assistant.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -20,6 +21,64 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+<!-- AI ASSISTANT WIDGET -->
+<div class="ai-widget">
+
+    <!-- Buton trigger -->
+    <button class="ai-trigger" id="aiTrigger" title="Întreabă AI despre filme">
+        <svg class="ai-icon-open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/>
+            <path d="M12 16v-4M12 8h.01"/>
+        </svg>
+        <svg class="ai-icon-close" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        <span class="ai-pulse"></span>
+    </button>
+
+    <!-- Chat panel -->
+    <div class="ai-panel" id="aiPanel">
+        <div class="ai-panel-header">
+            <div class="ai-header-info">
+                <div class="ai-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="ai-name">VISo</p>
+                    <p class="ai-status">Specialist în filme</p>
+                </div>
+            </div>
+            <button class="ai-panel-close" id="aiPanelClose">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="ai-messages" id="aiMessages">
+            <div class="ai-msg ai-msg--bot">
+                <div class="ai-msg-bubble">
+                    👋 Salut! Sunt <strong>CineBot</strong>. Întreabă-mă orice despre filmele din catalog sau despre cinema în general!
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-input-wrap">
+            <input type="text" id="aiInput" placeholder="Întreabă despre un film..." maxlength="300">
+            <button id="aiSend">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</div>
 
 <!-- MOVIE MODAL -->
 <div class="modal-overlay" id="movieModal">
@@ -64,6 +123,7 @@
 </div>
 
 <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/ai_assistant.js' %}"></script>
 
 </body>
 </html>
