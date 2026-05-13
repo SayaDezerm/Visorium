@@ -28,6 +28,7 @@ def login_view(request):
 
     return render(request, 'accounts/login.html', {'form': form})
     
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('home')
