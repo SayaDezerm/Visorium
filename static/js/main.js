@@ -51,7 +51,7 @@ const modalFavBtn       = document.getElementById('modalFavBtn');
 document.addEventListener('click', function(e) {
     const card = e.target.closest('.movie-card');
     if (!card) return;
-    if (e.target.closest('.btn-fav')) return; // ignoră click pe inimă
+    if (e.target.closest('.btn-fav')) return;
 
     const { title, year, genre, duration, description} = card.dataset;
 
@@ -68,7 +68,6 @@ document.addEventListener('click', function(e) {
         modalDuration.style.display   = 'none';
     }
 
-    // Buton favorit în modal (doar dacă există btn-fav pe card)
     const cardFavBtn = card.querySelector('.btn-fav');
     if (cardFavBtn) {
         modalFavBtn.style.display = 'flex';
