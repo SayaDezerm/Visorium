@@ -71,7 +71,7 @@ async function sendMessage() {
             },
             body: JSON.stringify({
                 message: message,
-                history: chatHistory.slice(-10), // ultimele 10 mesaje
+                history: chatHistory.slice(-10),
             })
         });
 
@@ -82,7 +82,7 @@ async function sendMessage() {
             addMessage(data.response, 'bot');
             chatHistory.push({ role: 'model', content: data.response });
         } else if (data.error) {
-            addMessage(`Eroare: ${data.error}`, 'bot');  // ← mai detaliat
+            addMessage(`Eroare`, 'bot');  
         }
 
     } catch (err) {
