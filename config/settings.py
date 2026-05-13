@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     # local apps
     'apps.catalog',
     'apps.accounts',
+    'apps.ai_assistant',
 ]
+#mmAIzaSyDsdHOBV91Trh7NT5n3Yo95Lc2TzFb_a9Y234
+GEMINI_API_KEY = ''
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
